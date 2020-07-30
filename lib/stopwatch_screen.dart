@@ -3,6 +3,7 @@ import 'action_button.dart';
 import 'blocs/stopwatch_bloc.dart';
 import 'flutter_bloc/bloc_provider.dart';
 import 'flutter_bloc/bloc_builder.dart';
+import 'flutter_bloc/bloc_listener.dart';
 
 class StopwatchScreenWithLocalState extends StatefulWidget {
   StopwatchScreenWithLocalState({Key key}) : super(key: key);
@@ -60,15 +61,32 @@ class StopwatchScaffold extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: Center(
-        child: BlocBuilder(
-            bloc: stopwatchBloc,
-            builder: (BuildContext context, StopwatchState state) {
-              return Text(
-                state.timeFormated,
-                style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
-              );
-            }),
+      body: BlocListener<StopwatchEvent, StopwatchState>(
+        bloc: stopwatchBloc,
+        listener: (BuildContext context, StopwatchState state) {
+          if (state.isSpecial) {
+            Scaffold.of(context).showSnackBar(SnackBar(
+              backgroundColor: Colors.lightGreenAccent,
+              content: Text(
+                '${state.timeFormated}',
+                style: TextStyle(
+                  color: Colors.black87,
+                ),
+              ),
+              duration: Duration(seconds: 1),
+            ));
+          }
+        },
+        child: Center(
+          child: BlocBuilder(
+              bloc: stopwatchBloc,
+              builder: (BuildContext context, StopwatchState state) {
+                return Text(
+                  state.timeFormated,
+                  style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
+                );
+              }),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(

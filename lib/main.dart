@@ -6,6 +6,7 @@ import 'bloc/bloc_delegate.dart';
 import 'blocs/counter_bloc.dart';
 import 'flutter_bloc/bloc_provider.dart';
 import 'blocs/stopwatch_bloc.dart';
+import 'flutter_bloc/bloc_provider_tree.dart';
 
 void main() {
   BlocSupervisor.delegate = MyBlocDelegate();
@@ -13,15 +14,15 @@ void main() {
   final stopwatchBloc = StopwatchBloc();
   final counterBloc = CounterBloc();
 
-  runApp(BlocProvider(
-    bloc: stopwatchBloc,
-    child: BlocProvider<CounterBloc>(
-      bloc: counterBloc,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData.dark(),
-        home: HomeScreen(),
-      ),
+  runApp(BlocProviderTree(
+    blocProviders: <BlocProvider>[
+      BlocProvider<CounterBloc>(bloc: counterBloc),
+      BlocProvider<StopwatchBloc>(bloc: stopwatchBloc)
+    ],
+    child: MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark(),
+      home: HomeScreen(),
     ),
   ));
 }
