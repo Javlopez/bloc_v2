@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
-import '../bloc/bloc.dart';
+//import '../bloc/bloc.dart';
+import 'package:bloc/bloc.dart';
 
 abstract class StopwatchEvent extends Equatable {
   StopwatchEvent([List props = const []]) : super();

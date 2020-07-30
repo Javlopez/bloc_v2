@@ -1,9 +1,9 @@
-import 'package:bloc_v2/blocs/counter_bloc.dart';
+import 'blocs/counter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'action_button.dart';
-import 'blocs/counter_bloc.dart';
-import 'flutter_bloc/bloc_builder.dart';
-import 'flutter_bloc/bloc_provider.dart';
+//import 'flutter_bloc/bloc_builder.dart';
+//import 'flutter_bloc/bloc_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CounterScreenWithGlobalState extends StatelessWidget {
   const CounterScreenWithGlobalState({Key key}) : super(key: key);
