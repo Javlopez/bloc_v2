@@ -14,34 +14,13 @@ class CounterScreenWithGlobalState extends StatelessWidget {
   }
 }
 
-class CounterScreenWithLocalState extends StatefulWidget {
+class CounterScreenWithLocalState extends StatelessWidget {
   CounterScreenWithLocalState({Key key}) : super(key: key);
-
-  @override
-  _CounterScreenWithLocalStateState createState() =>
-      _CounterScreenWithLocalStateState();
-}
-
-class _CounterScreenWithLocalStateState
-    extends State<CounterScreenWithLocalState> {
-  CounterBloc _counterBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _counterBloc = CounterBloc();
-  }
-
-  @override
-  void dispose() {
-    _counterBloc.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<CounterBloc>(
-      bloc: _counterBloc,
+      builder: (context) => CounterBloc(),
       child: CounterScaffold(title: 'Counter - Local State'),
     );
   }
