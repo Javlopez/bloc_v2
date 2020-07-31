@@ -1,8 +1,7 @@
 import 'blocs/counter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'action_button.dart';
-//import 'flutter_bloc/bloc_builder.dart';
-//import 'flutter_bloc/bloc_provider.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CounterScreenWithGlobalState extends StatelessWidget {
@@ -39,14 +38,12 @@ class CounterScaffold extends StatelessWidget {
         title: Text('Counter - Local state'),
       ),
       body: Center(
-          child: BlocBuilder(
-              bloc: counterBloc,
-              builder: (BuildContext context, int state) {
-                return Text(
-                  '$state',
-                  style: TextStyle(fontSize: 100, fontWeight: FontWeight.bold),
-                );
-              })),
+          child: BlocBuilder<CounterBloc, int>(builder: (context, state) {
+        return Text(
+          '$state',
+          style: TextStyle(fontSize: 100, fontWeight: FontWeight.bold),
+        );
+      })),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
         padding: EdgeInsets.all(16),
@@ -56,19 +53,19 @@ class CounterScaffold extends StatelessWidget {
             ActionButton(
               iconData: Icons.add,
               onPressed: () {
-                counterBloc.dispatch(CounterEvent.increment);
+                counterBloc.add(CounterEvent.increment);
               },
             ),
             ActionButton(
               iconData: Icons.remove,
               onPressed: () {
-                counterBloc.dispatch(CounterEvent.decrement);
+                counterBloc.add(CounterEvent.decrement);
               },
             ),
             ActionButton(
               iconData: Icons.replay,
               onPressed: () {
-                counterBloc.dispatch(CounterEvent.reset);
+                counterBloc.add(CounterEvent.reset);
               },
             ),
           ],

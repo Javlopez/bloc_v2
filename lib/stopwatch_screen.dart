@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'action_button.dart';
-import 'blocs/stopwatch_bloc.dart';
-//import 'flutter_bloc/bloc_provider.dart';
-//import 'flutter_bloc/bloc_builder.dart';
-//import 'flutter_bloc/bloc_listener.dart';
+import 'blocs/stopwatch/stopwatch_bloc.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StopwatchScreenWithLocalState extends StatelessWidget {
@@ -41,9 +39,8 @@ class StopwatchScaffold extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: BlocListener<StopwatchEvent, StopwatchState>(
-        bloc: stopwatchBloc,
-        listener: (BuildContext context, StopwatchState state) {
+      body: BlocListener<StopwatchBloc, StopwatchState>(
+        listener: (context, state) {
           if (state.isSpecial) {
             Scaffold.of(context).showSnackBar(SnackBar(
               backgroundColor: Colors.lightGreenAccent,
@@ -58,26 +55,24 @@ class StopwatchScaffold extends StatelessWidget {
           }
         },
         child: Center(
-          child: BlocBuilder(
-              bloc: stopwatchBloc,
-              builder: (BuildContext context, StopwatchState state) {
-                return Text(
-                  state.timeFormated,
-                  style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
-                );
-              }),
+          child: BlocBuilder<StopwatchBloc, StopwatchState>(
+              builder: (context, state) {
+            return Text(
+              state.timeFormated,
+              style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
+            );
+          }),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
         padding: EdgeInsets.all(16),
-        child: BlocBuilder(
-          bloc: stopwatchBloc,
-          condition: (StopwatchState previous, StopwatchState current) {
+        child: BlocBuilder<StopwatchBloc, StopwatchState>(
+          condition: (previous, current) {
             return previous.isInitial != current.isInitial ||
                 previous.isRunning != current.isRunning;
           },
-          builder: (BuildContext context, StopwatchState state) {
+          builder: (context, state) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -85,21 +80,21 @@ class StopwatchScaffold extends StatelessWidget {
                   ActionButton(
                     iconData: Icons.stop,
                     onPressed: () {
-                      stopwatchBloc.dispatch(StopStopwatch());
+                      stopwatchBloc.add(StopStopwatch());
                     },
                   )
                 else
                   ActionButton(
                     iconData: Icons.play_arrow,
                     onPressed: () {
-                      stopwatchBloc.dispatch(StartStopwatch());
+                      stopwatchBloc.add(StartStopwatch());
                     },
                   ),
                 if (!state.isInitial)
                   ActionButton(
                     iconData: Icons.replay,
                     onPressed: () {
-                      stopwatchBloc.dispatch(ResetStopwatch());
+                      stopwatchBloc.add(ResetStopwatch());
                     },
                   ),
               ],

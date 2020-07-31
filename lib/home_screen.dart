@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'counter_screen.dart';
 import 'blocs/counter_bloc.dart';
-import 'blocs/stopwatch_bloc.dart';
+import 'blocs/stopwatch/stopwatch_bloc.dart';
 import 'stopwatch_screen.dart';
-//import 'flutter_bloc/bloc_provider.dart';
-//import 'flutter_bloc/bloc_builder.dart';
-//import 'flutter_bloc/bloc_listener_tree.dart';
-//import 'flutter_bloc/bloc_listener.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -27,11 +24,10 @@ class HomeScreen extends StatelessWidget {
       );
     }
 
-    return BlocListenerTree(
-      blocListeners: [
-        BlocListener<CounterEvent, int>(
-          bloc: counterBloc,
-          listener: (BuildContext context, int state) {
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<CounterBloc, int>(
+          listener: (context, state) {
             if (state == 10) {
               showDialog(
                   context: context,
@@ -41,9 +37,8 @@ class HomeScreen extends StatelessWidget {
             }
           },
         ),
-        BlocListener<StopwatchEvent, StopwatchState>(
-          bloc: stopwatchBloc,
-          listener: (BuildContext context, StopwatchState state) {
+        BlocListener<StopwatchBloc, StopwatchState>(
+          listener: (context, state) {
             if (state.time.inMilliseconds == 10000) {
               if (!Navigator.of(context).canPop()) {
                 _pushScreen(context, StopwatchScreenWithGlobalState());
@@ -68,9 +63,8 @@ class HomeScreen extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.add_circle_outline),
               title: Text('Counter'),
-              subtitle: BlocBuilder(
-                bloc: counterBloc,
-                builder: (BuildContext context, int state) {
+              subtitle: BlocBuilder<CounterBloc, int>(
+                builder: (context, state) {
                   return Text('$state');
                 },
               ),
@@ -81,7 +75,7 @@ class HomeScreen extends StatelessWidget {
               onTap: () =>
                   _pushContent(context, CounterScreenWithGlobalState()),
               onLongPress: () {
-                counterBloc.dispatch(CounterEvent.increment);
+                counterBloc.add(CounterEvent.increment);
               },
             ),
             ListTile(
@@ -97,9 +91,8 @@ class HomeScreen extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.add_circle_outline),
               title: Text('Stopwatch'),
-              subtitle: BlocBuilder(
-                bloc: stopwatchBloc,
-                builder: (BuildContext context, StopwatchState state) {
+              subtitle: BlocBuilder<StopwatchBloc, StopwatchState>(
+                builder: (context, state) {
                   return Text('${state.timeFormated}');
                 },
               ),
@@ -110,10 +103,10 @@ class HomeScreen extends StatelessWidget {
               onTap: () =>
                   _pushContent(context, StopwatchScreenWithGlobalState()),
               onLongPress: () {
-                if (stopwatchBloc.currentState.isRunning) {
-                  stopwatchBloc.dispatch(StopStopwatch());
+                if (stopwatchBloc.state.isRunning) {
+                  stopwatchBloc.add(StopStopwatch());
                 } else {
-                  stopwatchBloc.dispatch(StartStopwatch());
+                  stopwatchBloc.add(StartStopwatch());
                 }
               },
             ),
